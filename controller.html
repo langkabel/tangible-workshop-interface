@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="de">
-<%- include('./components/head.html', { title: 'Workshop Controller' }) %>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop Controller</title>
+</head>
 <body class="font-sans flex flex-col items-center py-8 px-4 min-h-screen bg-[#1a1a2e] text-white">
   <h1 class="mb-6 text-2xl">Reaktionen</h1>
-  <%- include('./components/emoji-grid.html') %>
+  <div id="emoji-grid" class="grid grid-cols-4 gap-4 max-w-xs w-full"></div>
 
   <script type="module" src="/src/controller.ts"></script>
 </body>

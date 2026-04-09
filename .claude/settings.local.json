@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "Bash(curl -s http://localhost:5199/controller.html)",
+      "Bash(curl -s http://localhost:5199/display.html)",
+      "Bash(curl -s http://localhost:5199/)",
+      "Bash(curl -s http://localhost:5199/tangible-workshop-interface/controller.html)",
+      "Bash(curl -s http://localhost:5199/tangible-workshop-interface/display.html)",
+      "Bash(curl -s \"http://localhost:5199/tangible-workshop-interface/\")"
     ]
   }
 }
