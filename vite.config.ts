@@ -2,8 +2,8 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import { createHtmlPlugin } from 'vite-plugin-html';
 
-export default defineConfig({
-  base: '/tangible-workshop-interface/',
+export default defineConfig(({ command }) => ({
+  base: command === 'serve' ? '/' : '/tangible-workshop-interface/',
   plugins: [
     createHtmlPlugin({
       minify: true,
@@ -47,4 +47,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
