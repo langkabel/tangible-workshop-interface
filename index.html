@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('./components/head.html', { title: 'Workshop' }) %>
+<body class="font-sans flex flex-col items-center justify-center min-h-screen bg-[#1a1a2e] text-white">
+  <h1 class="mb-8 text-3xl font-bold">Scan to join</h1>
+
+  <div class="bg-white rounded-xl p-4 mb-4">
+    <canvas id="qr-canvas"></canvas>
+  </div>
+
+  <p id="controller-url" class="text-sm text-gray-400 mb-8 select-all"></p>
+
+  <div class="flex gap-4">
+    <a
+      id="display-link"
+      class="px-6 py-3 rounded-xl bg-[#16213e] text-white no-underline transition-colors duration-100 hover:bg-[#0f3460]"
+      target="_blank"
+    >
+      Open Display
+    </a>
+    <a
+      id="controller-link"
+      class="px-6 py-3 rounded-xl bg-[#16213e] text-white no-underline transition-colors duration-100 hover:bg-[#0f3460]"
+      target="_blank"
+    >
+      Open Controller
+    </a>
+  </div>
+
+  <script type="module" src="/src/index.ts"></script>
+</body>
+</html>

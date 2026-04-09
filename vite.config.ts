@@ -9,6 +9,15 @@ export default defineConfig({
       minify: true,
       pages: [
         {
+          filename: 'index.html',
+          template: 'index.html',
+          injectOptions: {
+            ejsOptions: {
+              filename: resolve(__dirname, 'index.html'),
+            },
+          },
+        },
+        {
           filename: 'controller.html',
           template: 'controller.html',
           injectOptions: {
@@ -32,6 +41,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
+        index: resolve(__dirname, 'index.html'),
         controller: resolve(__dirname, 'controller.html'),
         display: resolve(__dirname, 'display.html'),
       },
