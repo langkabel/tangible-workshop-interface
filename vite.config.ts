@@ -7,6 +7,26 @@ export default defineConfig({
   plugins: [
     createHtmlPlugin({
       minify: true,
+      pages: [
+        {
+          filename: 'controller.html',
+          template: 'controller.html',
+          injectOptions: {
+            ejsOptions: {
+              filename: resolve(__dirname, 'controller.html'),
+            },
+          },
+        },
+        {
+          filename: 'display.html',
+          template: 'display.html',
+          injectOptions: {
+            ejsOptions: {
+              filename: resolve(__dirname, 'display.html'),
+            },
+          },
+        },
+      ],
     }),
   ],
   build: {
