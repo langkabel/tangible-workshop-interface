@@ -6,7 +6,106 @@
   <title>Workshop Display</title>
 </head>
 <body class="bg-black min-h-screen overflow-hidden relative">
-  <div id="reaction-container" class="absolute inset-0 pointer-events-none"></div>
+
+  <!-- Fullscreen iframe (z-0) -->
+  <iframe id="display-iframe"
+    class="absolute inset-0 w-full h-full border-none z-0"
+    src="" allow="autoplay; fullscreen; clipboard-write"
+    referrerpolicy="no-referrer">
+  </iframe>
+
+  <!-- Spotlight overlay (z-10, between iframe and emojis) -->
+  <div id="spotlight-overlay"
+    class="absolute inset-0 z-10 pointer-events-none"
+    style="display: none;">
+  </div>
+
+  <!-- Emoji reaction container (z-20, pointer-events-none so clicks pass to iframe) -->
+  <div id="reaction-container"
+    class="absolute inset-0 pointer-events-none z-20">
+  </div>
+
+  <!-- Welcome overlay (z-30, visible on first load before URL is set) -->
+  <div id="welcome-overlay"
+    class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black">
+    <h1 class="text-white text-2xl mb-6 font-bold">Workshop Display</h1>
+    <form id="welcome-form" class="flex gap-2 w-full max-w-md px-4">
+      <input id="welcome-url-input" type="url" placeholder="https://..."
+        class="flex-1 bg-[#1e293b] border border-[#334155] rounded-full px-5 py-3 text-white text-sm outline-none focus:border-[#2563eb] transition-colors"
+        required>
+      <button type="submit"
+        class="bg-[#2563eb] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#1d4ed8] transition-colors">
+        Go
+      </button>
+    </form>
+    <p class="text-[#334155] text-xs mt-4">Enter a URL to display in the background</p>
+  </div>
+
+  <!-- QR overlay (z-30, full screen behind nav bar, starts hidden) -->
+  <div id="qr-overlay"
+    class="absolute inset-0 z-30 flex-col items-center justify-center bg-black/[0.93]"
+    style="display: none;">
+    <h2 class="text-white text-2xl font-bold mb-4">Scan to join</h2>
+    <div class="bg-white rounded-2xl p-6">
+      <canvas id="qr-canvas"></canvas>
+    </div>
+    <p id="qr-url-text" class="text-[#64748b] text-sm mt-3"></p>
+    <p class="text-[#334155] text-xs mt-2">click anywhere or press ESC to close</p>
+  </div>
+
+  <!-- Nav hover zone (z-50, invisible trigger area at top of viewport) -->
+  <div id="nav-hover-zone" class="fixed top-0 left-0 right-0 h-[60px] z-50">
+    <nav id="nav-bar"
+      class="absolute top-0 left-0 right-0 h-[52px] bg-[rgba(5,8,20,0.93)] backdrop-blur-xl border-b border-white/[0.06] px-3 flex items-center gap-2 -translate-y-full opacity-0 transition-all duration-300">
+
+      <!-- LEFT: status area -->
+      <div class="flex items-center gap-2 min-w-[160px]">
+        <!-- Timer block -->
+        <div id="timer-block"
+          class="flex items-center gap-1 bg-white/5 border border-white/[0.08] rounded-[9px] px-2 py-1 h-[34px]">
+          <span id="timer-display"
+            class="text-sm font-bold font-mono text-[#475569] min-w-[44px]"
+            style="font-variant-numeric: tabular-nums;">
+            00:00
+          </span>
+          <button id="timer-btn" type="button"
+            class="w-[28px] h-[28px] rounded-md flex items-center justify-center text-sm cursor-pointer bg-[rgba(34,197,94,0.15)] text-[#4ade80] border border-[rgba(34,197,94,0.3)]"
+            title="Start">
+            ▶
+          </button>
+        </div>
+        <!-- Audience count -->
+        <div class="flex items-center gap-1 bg-white/5 border border-white/[0.08] rounded-[9px] px-2 py-1 h-[34px] text-xs text-[#94a3b8]">
+          👥 <span id="audience-count" class="text-[#60a5fa] font-bold text-sm">0</span>
+        </div>
+      </div>
+
+      <!-- CENTER: URL bar -->
+      <div class="flex-1 flex justify-center">
+        <form id="nav-url-form" class="flex items-center gap-1.5 w-[340px]">
+          <input id="nav-url-input" type="url" placeholder="https://..."
+            class="flex-1 bg-[#1a2235] border border-[#2d3f55] rounded-2xl px-3.5 py-1.5 text-[#cbd5e1] text-xs outline-none focus:border-[#2563eb] transition-colors">
+          <button type="submit"
+            class="bg-[#2563eb] text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[#1d4ed8] transition-colors">
+            Go
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT: controls -->
+      <div class="flex items-center gap-1 min-w-[160px] justify-end">
+        <button id="btn-reactions" type="button" class="nav-btn" title="Toggle reactions">😶</button>
+        <button id="btn-mute" type="button" class="nav-btn" title="Toggle mute">🔇</button>
+        <button id="btn-spotlight" type="button" class="nav-btn" title="Hold Ctrl for spotlight">
+          🔦 <span class="text-[9px] font-semibold text-[#475569] bg-white/[0.07] border border-white/[0.12] rounded px-1 leading-tight">Ctrl</span>
+        </button>
+        <button id="btn-qr" type="button" class="nav-btn" title="Show QR code">⊞</button>
+        <div class="w-px h-[22px] bg-white/[0.08] mx-0.5"></div>
+        <button id="btn-fullscreen" type="button" class="nav-btn text-[#64748b]" title="Fullscreen">⤢</button>
+      </div>
+
+    </nav>
+  </div>
 
   <script type="module" src="/src/display.ts"></script>
 </body>
