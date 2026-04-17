@@ -3,7 +3,6 @@ import { client, CHANNELS } from "./lib/ably";
 import type { FeedbackMessage, FeedbackKind } from "./types/messages";
 
 const reactionsChannel = client.channels.get(CHANNELS.reactions);
-reactionsChannel.presence.enter();
 
 // ---------------------------------------------------------------------------
 // Connection status
@@ -56,7 +55,9 @@ document
         payload: { kind },
         ts: Date.now(),
       };
-      reactionsChannel.publish('event', msg);
+      reactionsChannel.publish('event', msg).catch((err) => {
+        console.error('Failed to publish reaction:', err);
+      });
     });
   });
 
@@ -66,6 +67,7 @@ document
 client.connection.on('connected', () => {
   console.log('Ably connected (controller)');
   setStatus(true);
+  reactionsChannel.presence.enter();
   updateAudienceCount();
 });
 
