@@ -1,36 +1,280 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workshop</title>
-  <script type="module" crossorigin src="/tangible-workshop-interface/assets/index-D9xF694Z.js"></script>
-  <link rel="modulepreload" crossorigin href="/tangible-workshop-interface/assets/styles-CdR9h6-1.js">
-  <link rel="stylesheet" crossorigin href="/tangible-workshop-interface/assets/styles-Dd6Dl_gb.css">
-</head>
-<body class="font-sans flex flex-col items-center justify-center min-h-screen bg-[#1a1a2e] text-white">
-  <h1 class="mb-8 text-3xl font-bold">Scan to join</h1>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Workshop Display</title>
+      <script type="module" crossorigin src="/tangible-workshop-interface/assets/index-mdfvuzWg.js"></script>
+      <link rel="modulepreload" crossorigin href="/tangible-workshop-interface/assets/ably-LzjRpZQI.js">
+      <link rel="stylesheet" crossorigin href="/tangible-workshop-interface/assets/ably-C2LDqrjZ.css">
+    </head>
+    <body class="bg-black min-h-screen overflow-hidden relative">
+        <!-- Fullscreen iframe (z-0) -->
+        <iframe
+            id="display-iframe"
+            class="absolute inset-0 w-full h-full border-none z-0"
+            src=""
+            allow="autoplay; fullscreen; clipboard-write"
+            allowfullscreen
+            referrerpolicy="no-referrer"
+        ></iframe>
 
-  <div class="bg-white rounded-xl p-4 mb-4">
-    <canvas id="qr-canvas"></canvas>
-  </div>
+        <!-- Spotlight overlay (z-10) -->
+        <div
+            id="spotlight-overlay"
+            class="absolute inset-0 z-10 pointer-events-none"
+            style="display: none"
+        ></div>
 
-  <p id="controller-url" class="text-sm text-gray-400 mb-8 select-all"></p>
+        <!-- Reaction container (z-20) -->
+        <div
+            id="reaction-container"
+            class="absolute inset-0 pointer-events-none z-20"
+        ></div>
 
-  <div class="flex gap-4">
-    <a
-      id="display-link"
-      class="px-6 py-3 rounded-xl bg-[#16213e] text-white no-underline transition-colors duration-100 hover:bg-[#0f3460]"
-    >
-      Open Display
-    </a>
-    <a
-      id="controller-link"
-      class="px-6 py-3 rounded-xl bg-[#16213e] text-white no-underline transition-colors duration-100 hover:bg-[#0f3460]"
-    >
-      Open Controller
-    </a>
-  </div>
+        <!-- Welcome overlay (z-30) -->
+        <div
+            id="welcome-overlay"
+            class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black"
+        >
+            <h1
+                class="text-white text-2xl mb-6 font-bold"
+                style="
+                    font-family: &quot;Space Mono&quot;, monospace;
+                    letter-spacing: 0.08em;
+                "
+            >
+                WORKSHOP DISPLAY
+            </h1>
+            <form id="welcome-form" class="flex gap-2 w-full max-w-md px-4">
+                <input
+                    id="welcome-url-input"
+                    type="url"
+                    placeholder="https://..."
+                    class="flex-1 bg-black border border-white px-4 py-3 text-white text-sm outline-none"
+                    style="
+                        font-family: &quot;Space Mono&quot;, monospace;
+                        border-radius: 0;
+                    "
+                    required
+                />
+                <button
+                    type="submit"
+                    class="bg-white text-black px-6 py-3 font-bold text-sm"
+                    style="
+                        font-family: &quot;Space Mono&quot;, monospace;
+                        border-radius: 0;
+                    "
+                >
+                    GO
+                </button>
+            </form>
+        </div>
 
-</body>
+        <!-- QR overlay (z-[60], above sidebar) -->
+        <div
+            id="qr-overlay"
+            class="absolute inset-0 z-[60] flex-col items-center justify-center bg-black/[0.93]"
+            style="display: none"
+        >
+            <h2
+                class="text-white text-2xl font-bold mb-4"
+                style="
+                    font-family: &quot;Space Mono&quot;, monospace;
+                    letter-spacing: 0.08em;
+                "
+            >
+                SCAN TO JOIN
+            </h2>
+            <div class="bg-white p-6">
+                <canvas id="qr-canvas"></canvas>
+            </div>
+            <p
+                id="qr-url-text"
+                class="text-[#64748b] text-sm mt-3"
+                style="font-family: &quot;Space Mono&quot;, monospace"
+            ></p>
+            <p
+                class="text-[#334155] text-xs mt-2"
+                style="font-family: &quot;Space Mono&quot;, monospace"
+            >
+                CLICK ANYWHERE OR PRESS ESC TO CLOSE
+            </p>
+        </div>
+
+        <!-- Sidebar hover zone (z-50, 40px strip on right edge) -->
+        <div
+            id="sidebar-hover-zone"
+            class="fixed top-0 right-0 w-10 h-full z-50"
+        ></div>
+
+        <!-- Sidebar panel (z-50) -->
+        <div id="sidebar" class="sidebar">
+            <!-- Section 1: Status -->
+            <div class="sb-section">
+                <div id="timer-block" class="sb-timer-block">
+                    <span
+                        id="timer-display"
+                        class="font-mono text-[#475569]"
+                        style="
+                            font-variant-numeric: tabular-nums;
+                            font-family: 'Space Mono', monospace;
+                            font-size: 28px;
+                            font-weight: 700;
+                            flex: 1;
+                        "
+                        >00:00</span
+                    >
+                    <button
+                        id="timer-btn"
+                        type="button"
+                        class="flex items-center justify-center text-sm cursor-pointer bg-[rgba(34,197,94,0.15)] text-[#4ade80] border border-[rgba(34,197,94,0.3)]"
+                        style="border-radius: 0; width: 36px; height: 36px"
+                        title="Start"
+                    >
+                        ▶
+                    </button>
+                </div>
+                <div class="sb-audience">
+                    <span class="material-symbols-sharp sb-icon">people</span>
+                    <span id="audience-count" class="sb-count">0</span>
+                </div>
+            </div>
+
+            <div class="sb-divider"></div>
+
+            <!-- Section 2: Feedback bars -->
+            <div class="sb-section">
+                <div class="sb-label">FEEDBACK</div>
+
+                <div class="feedback-row" data-kind="lightbulb">
+                    <span
+                        class="material-symbols-sharp sb-icon"
+                        style="background: #dacd65; color: #000; padding: 3px"
+                        >lightbulb</span
+                    >
+                    <div class="bar-track">
+                        <div
+                            class="bar-fill"
+                            style="
+                                border-color: #dacd65;
+                                background: rgba(218, 205, 101, 0.4);
+                                width: 0%;
+                            "
+                        ></div>
+                    </div>
+                    <span class="bar-count">0</span>
+                </div>
+
+                <div class="feedback-row" data-kind="heart">
+                    <span
+                        class="material-symbols-sharp sb-icon"
+                        style="background: #9a2b2e; color: #000; padding: 3px"
+                        >favorite</span
+                    >
+                    <div class="bar-track">
+                        <div
+                            class="bar-fill"
+                            style="
+                                border-color: #9a2b2e;
+                                background: rgba(154, 43, 46, 0.4);
+                                width: 0%;
+                            "
+                        ></div>
+                    </div>
+                    <span class="bar-count">0</span>
+                </div>
+
+                <div class="feedback-row" data-kind="star">
+                    <span
+                        class="material-symbols-sharp sb-icon"
+                        style="background: #5085c3; color: #000; padding: 3px"
+                        >star</span
+                    >
+                    <div class="bar-track">
+                        <div
+                            class="bar-fill"
+                            style="
+                                border-color: #5085c3;
+                                background: rgba(80, 133, 195, 0.4);
+                                width: 0%;
+                            "
+                        ></div>
+                    </div>
+                    <span class="bar-count">0</span>
+                </div>
+
+                <div class="feedback-row" data-kind="replay">
+                    <span
+                        class="material-symbols-sharp sb-icon"
+                        style="background: #00666c; color: #000; padding: 3px"
+                        >replay</span
+                    >
+                    <div class="bar-track">
+                        <div
+                            class="bar-fill"
+                            style="
+                                border-color: #00666c;
+                                background: rgba(0, 102, 108, 0.4);
+                                width: 0%;
+                            "
+                        ></div>
+                    </div>
+                    <span class="bar-count">0</span>
+                </div>
+            </div>
+
+            <div class="sb-divider"></div>
+
+            <!-- Section 3: Controls -->
+            <div class="sb-section">
+                <form id="sidebar-url-form" class="sb-url-form">
+                    <input
+                        id="sidebar-url-input"
+                        type="url"
+                        placeholder="https://..."
+                        class="sb-url-input"
+                    />
+                    <button type="submit" class="sb-btn">GO</button>
+                </form>
+                <div class="sb-icon-row">
+                    <button
+                        id="btn-reactions"
+                        type="button"
+                        class="sb-icon-btn"
+                        title="Toggle reactions"
+                    >
+                        <span class="material-symbols-sharp"
+                            >emoji_emotions</span
+                        >
+                    </button>
+                    <button
+                        id="btn-spotlight"
+                        type="button"
+                        class="sb-icon-btn"
+                        title="Spotlight (ESC to exit)"
+                    >
+                        <span class="material-symbols-sharp">highlight</span>
+                    </button>
+                    <button
+                        id="btn-qr"
+                        type="button"
+                        class="sb-icon-btn"
+                        title="Show QR code"
+                    >
+                        <span class="material-symbols-sharp">qr_code_2</span>
+                    </button>
+                    <button
+                        id="btn-fullscreen"
+                        type="button"
+                        class="sb-icon-btn"
+                        title="Fullscreen"
+                    >
+                        <span class="material-symbols-sharp">fullscreen</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </body>
 </html>
