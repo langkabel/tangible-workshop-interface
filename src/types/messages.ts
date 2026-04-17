@@ -1,8 +1,8 @@
 // Internal message — controller -> display (we own the shape)
 export interface EmojiMessage {
-  type: 'emoji';
+  type: "emoji";
   payload: { emoji: string };
-  ts: number;
+  // ts: number;
 }
 
 // External message — ESP32 -> display via Ably REST (untrusted)
@@ -21,11 +21,11 @@ export type WorkshopMessage = EmojiMessage | ExternalMessage;
 
 export function isExternalMessage(data: unknown): data is ExternalMessage {
   return (
-    typeof data === 'object' &&
+    typeof data === "object" &&
     data !== null &&
-    'type' in data &&
-    typeof (data as Record<string, unknown>).type === 'string' &&
-    'ts' in data &&
-    typeof (data as Record<string, unknown>).ts === 'number'
+    "type" in data &&
+    typeof (data as Record<string, unknown>).type === "string" &&
+    "ts" in data &&
+    typeof (data as Record<string, unknown>).ts === "number"
   );
 }
