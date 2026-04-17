@@ -6,7 +6,7 @@ export default defineConfig(({ command }) => ({
   build: {
     rollupOptions: {
       input: {
-        display: resolve(__dirname, 'display.html'),
+        index: resolve(__dirname, 'index.html'),
         controller: resolve(__dirname, 'controller.html'),
       },
     },
