@@ -5,6 +5,7 @@ import type { EmojiMessage } from "./types/messages";
 const EMOJIS = ["👍", "👎", "😂", "🔥", "❤️", "👏", "🎉", "😮"];
 
 const reactionsChannel = client.channels.get(CHANNELS.reactions);
+reactionsChannel.presence.enter();
 const grid = document.getElementById("emoji-grid")!;
 
 EMOJIS.forEach((emoji) => {
