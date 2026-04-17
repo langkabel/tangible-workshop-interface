@@ -26,6 +26,7 @@ export function isExternalMessage(data: unknown): data is ExternalMessage {
     data !== null &&
     "type" in data &&
     typeof (data as Record<string, unknown>).type === "string" &&
+    (data as Record<string, unknown>).type !== "feedback" &&
     "ts" in data &&
     typeof (data as Record<string, unknown>).ts === "number"
   );

@@ -247,3 +247,7 @@
   text-transform: uppercase;
   font-family: 'Space Mono', monospace;
 }
+
+.ctrl-btn:active {
+  background: rgba(255, 255, 255, 0.05);
+}
