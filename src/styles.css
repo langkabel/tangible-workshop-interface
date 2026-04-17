@@ -1,17 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,200,0,0&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .nav-btn {
-    @apply bg-white/5 border border-white/[0.09] rounded-lg text-[#94a3b8] px-2.5 h-[34px] text-[13px] cursor-pointer flex items-center gap-1 whitespace-nowrap;
-  }
-  .nav-btn.active {
-    @apply bg-[rgba(37,99,235,0.25)] border-[#2563eb] text-[#93c5fd];
-  }
+/* ── Material Symbols Sharp ───────────────────────────────────────── */
+.material-symbols-sharp {
+  font-family: 'Material Symbols Sharp';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
 }
 
-.nav-btn.spotlight-active {
+/* ── Sidebar panel ────────────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 240px;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.93);
+  backdrop-filter: blur(16px);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translateX(100%);
+  transition: transform 300ms ease;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Space Mono', monospace;
+  overflow-y: auto;
+}
+
+.sidebar-open {
+  transform: translateX(0);
+}
+
+/* ── Sidebar sections ─────────────────────────────────────────────── */
+.sb-section {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sb-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.sb-label {
+  font-size: 9px;
+  color: #555;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
+}
+
+.sb-timer-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sb-audience {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+}
+
+.sb-count {
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: 'Space Mono', monospace;
+}
+
+.sb-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ── Feedback bars ────────────────────────────────────────────────── */
+.feedback-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  width: 0%;
+  border-right: 1px solid;
+  transition: width 300ms ease;
+}
+
+.bar-count {
+  font-size: 11px;
+  color: #555;
+  font-family: 'Space Mono', monospace;
+  min-width: 20px;
+  text-align: right;
+}
+
+/* ── Sidebar controls ─────────────────────────────────────────────── */
+.sb-url-form {
+  display: flex;
+  gap: 6px;
+}
+
+.sb-url-input {
+  flex: 1;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  padding: 6px 8px;
+  outline: none;
+  border-radius: 0;
+  min-width: 0;
+}
+
+.sb-url-input:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.sb-btn {
+  background: #fff;
+  color: #000;
+  border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 6px 10px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+.sb-icon-row {
+  display: flex;
+  gap: 6px;
+}
+
+.sb-icon-btn {
+  background: #000;
+  color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 150ms, color 150ms;
+  flex-shrink: 0;
+}
+
+.sb-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.sb-icon-btn.active,
+.sb-btn-active {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+/* ── Spotlight active state ───────────────────────────────────────── */
+.sb-icon-btn.spotlight-active {
   background: rgba(234, 179, 8, 0.18);
   border-color: rgba(234, 179, 8, 0.5);
   color: #fde047;
@@ -20,5 +200,50 @@
 
 @keyframes spotlight-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.25); }
-  50% { box-shadow: 0 0 0 5px rgba(234, 179, 8, 0.08); }
+  50%       { box-shadow: 0 0 0 5px rgba(234, 179, 8, 0.08); }
+}
+
+/* ── Controller layout ────────────────────────────────────────────── */
+.ctrl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+.ctrl-btn {
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  font-family: 'Space Mono', monospace;
+  border-radius: 0;
+  transition: background 80ms;
+  padding: 0;
+}
+
+.ctrl-icon {
+  font-family: 'Material Symbols Sharp';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 48px;
+  display: inline-block;
+  line-height: 1;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+}
+
+.ctrl-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
 }
