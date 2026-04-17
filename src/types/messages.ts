@@ -2,7 +2,7 @@
 export interface EmojiMessage {
   type: "emoji";
   payload: { emoji: string };
-  // ts: number;
+  ts: number;
 }
 
 // External message — ESP32 -> display via Ably REST (untrusted)
