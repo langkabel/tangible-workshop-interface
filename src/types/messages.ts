@@ -1,7 +1,9 @@
 // Internal message — controller -> display (we own the shape)
-export interface EmojiMessage {
-  type: "emoji";
-  payload: { emoji: string };
+export type FeedbackKind = "lightbulb" | "heart" | "star" | "replay";
+
+export interface FeedbackMessage {
+  type: "feedback";
+  payload: { kind: FeedbackKind };
   ts: number;
 }
 
@@ -16,8 +18,7 @@ export interface ExternalMessage {
   ts: number;
 }
 
-// Extend this union as new message types are added
-export type WorkshopMessage = EmojiMessage | ExternalMessage;
+export type WorkshopMessage = FeedbackMessage | ExternalMessage;
 
 export function isExternalMessage(data: unknown): data is ExternalMessage {
   return (

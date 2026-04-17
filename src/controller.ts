@@ -1,6 +1,6 @@
 import "./styles.css";
 import { client, CHANNELS } from "./lib/ably";
-import type { EmojiMessage } from "./types/messages";
+import type { FeedbackMessage } from "./types/messages";
 
 const EMOJIS = ["👍", "👎", "😂", "🔥", "❤️", "👏", "🎉", "😮"];
 
@@ -14,9 +14,9 @@ EMOJIS.forEach((emoji) => {
     "text-[2.5rem] p-3 border-none rounded-xl bg-[#16213e] cursor-pointer transition-[transform,background] duration-100 select-none active:scale-90 active:bg-[#0f3460]";
   btn.textContent = emoji;
   btn.addEventListener("click", () => {
-    const msg: EmojiMessage = {
-      type: "emoji",
-      payload: { emoji },
+    const msg: FeedbackMessage = {
+      type: "feedback",
+      payload: { kind: "lightbulb" }, // temporary placeholder — replaced in Task 8
       ts: Date.now(),
     };
     reactionsChannel.publish("event", msg);
