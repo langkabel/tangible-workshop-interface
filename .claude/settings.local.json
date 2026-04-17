@@ -4,11 +4,17 @@
       "Bash(npm install:*)",
       "Bash(npx vite:*)",
       "Bash(curl -s http://localhost:5199/controller.html)",
-      "Bash(curl -s http://localhost:5199/display.html)",
+      "Bash(curl -s http://localhost:5199/index.html)",
       "Bash(curl -s http://localhost:5199/)",
       "Bash(curl -s http://localhost:5199/tangible-workshop-interface/controller.html)",
-      "Bash(curl -s http://localhost:5199/tangible-workshop-interface/display.html)",
-      "Bash(curl -s \"http://localhost:5199/tangible-workshop-interface/\")"
+      "Bash(curl -s http://localhost:5199/tangible-workshop-interface/index.html)",
+      "Bash(curl -s \"http://localhost:5199/tangible-workshop-interface/\")",
+      "Bash(C:\\\\Users\\\\Linus Langkabel\\\\.claude\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(cat)",
+      "Read(//tmp/**)",
+      "Bash(npm test:*)"
     ]
   }
 }

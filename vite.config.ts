@@ -8,7 +8,6 @@ export default defineConfig(({ command }) => ({
       input: {
         index: resolve(__dirname, 'index.html'),
         controller: resolve(__dirname, 'controller.html'),
-        display: resolve(__dirname, 'display.html'),
       },
     },
   },
