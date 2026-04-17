@@ -44,15 +44,36 @@ export function initFeedback(
 
   function renderFloatingIcon(kind: FeedbackKind): void {
     if (getReactionsMuted()) return;
-    const el = document.createElement('span');
-    el.className =
-      'material-symbols-sharp absolute bottom-0 animate-float-up pointer-events-none';
-    el.style.left = `${Math.random() * 90}%`;
-    el.style.color = KIND_COLOR[kind];
-    el.style.fontSize = '3rem';
-    el.textContent = KIND_ICON[kind];
-    reactionContainer.appendChild(el);
-    el.addEventListener('animationend', () => el.remove());
+
+    // Outer wrapper: floats up and fades out
+    const wrapper = document.createElement('div');
+    wrapper.className = 'float-icon';
+    wrapper.style.left = `${Math.random() * 85}%`;
+
+    // Random spin speed: 2–18s per rotation
+    const spinDuration = (2 + Math.random() * 16).toFixed(2) + 's';
+    const spinDelay = `${-(Math.random() * 18).toFixed(2)}s`;
+
+    // Colored square: continuously rotates, starts at a random phase
+    const square = document.createElement('div');
+    square.className = 'float-icon-square';
+    square.style.background = KIND_COLOR[kind];
+    square.style.animation = `icon-spin ${spinDuration} linear infinite`;
+    square.style.animationDelay = spinDelay;
+
+    // Icon: black, counter-rotates at same speed to stay upright
+    const icon = document.createElement('span');
+    icon.className = 'material-symbols-sharp';
+    icon.style.color = '#000';
+    icon.style.fontSize = '2rem';
+    icon.style.animation = `icon-counter-spin ${spinDuration} linear infinite`;
+    icon.style.animationDelay = spinDelay;
+    icon.textContent = KIND_ICON[kind];
+
+    square.appendChild(icon);
+    wrapper.appendChild(square);
+    reactionContainer.appendChild(wrapper);
+    wrapper.addEventListener('animationend', () => wrapper.remove());
   }
 
   reactionsChannel.subscribe('event', (msg: InboundMessage) => {

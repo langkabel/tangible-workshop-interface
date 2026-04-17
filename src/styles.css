@@ -68,6 +68,7 @@
 .sb-timer-block {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
 }
 
@@ -161,22 +162,22 @@
 
 .sb-icon-row {
   display: flex;
-  gap: 6px;
+  gap: 0;
+  margin: 0 -16px -16px;
 }
 
 .sb-icon-btn {
   background: #000;
   color: rgba(255, 255, 255, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  width: 36px;
-  height: 36px;
+  flex: 1;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border-radius: 0;
   transition: background 150ms, color 150ms;
-  flex-shrink: 0;
 }
 
 .sb-icon-btn:hover {
@@ -201,6 +202,35 @@
 @keyframes spotlight-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.25); }
   50%       { box-shadow: 0 0 0 5px rgba(234, 179, 8, 0.08); }
+}
+
+/* ── Floating reaction icons ──────────────────────────────────────── */
+@keyframes icon-float-up {
+  0%   { opacity: 1; transform: translateY(0); }
+  35%  { opacity: 0; }
+  100% { opacity: 0; transform: translateY(-50vh); }
+}
+
+@keyframes icon-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes icon-counter-spin {
+  to { transform: rotate(-360deg); }
+}
+
+.float-icon {
+  position: absolute;
+  bottom: 0;
+  pointer-events: none;
+  animation: icon-float-up 6s ease-out forwards;
+}
+
+.float-icon-square {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
 }
 
 /* ── Controller layout ────────────────────────────────────────────── */
